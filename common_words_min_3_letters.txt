@@ -1,3 +1,6 @@
+NCL
+RAIL
+SKY
 about
 act
 actually
@@ -134,6 +137,7 @@ fire
 first
 fish
 five
+flag
 fly
 follow
 food
@@ -354,6 +358,7 @@ sing
 sit
 six
 size
+sky
 sleep
 slow
 small
