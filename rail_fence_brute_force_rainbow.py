@@ -46,10 +46,12 @@ def brute_force(cipher: str, wordlist: []):
                 if word in candidate:
                     word_count += 1
             if word_count > highest_word_count:
-                print(word_count,candidate)
+                print(word_count, candidate)
                 highest_word_count = word_count
                 row_candidate = key
                 offset_candidate = offset
+            if word_count == highest_word_count and word_count > 2:
+                print(word_count, candidate)
             #  print(f"{key},{offset} {highest_word_count} - {candidate} ")
     return row_candidate, offset_candidate
 
