@@ -74,6 +74,7 @@ city
 class
 clear
 close
+code
 cold
 colour
 come
@@ -480,3 +481,4 @@ year
 yes
 you
 young
+zigzag
