@@ -2,9 +2,10 @@ import click
 
 
 @click.command()
-@click.option('-t', '--plain-text', help='The ciphered text enclosed in quotes.')
-def main(plain_text):
-    print(encode(plain_text))
+@click.option('-t', '--plain-text', help='The plain text enclosed in quotes.')
+@click.option('-k', '--key', help='The number of rows to use')
+def main(plain_text, key):
+    print(encode(plain_text, key))
 
 
 def encode(plaintext: str, key: int, offset: int):
