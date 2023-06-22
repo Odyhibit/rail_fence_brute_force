@@ -32,14 +32,6 @@ def decode(cipher: str, key: int, offset: int = 0) -> str:
     return "".join(plaintext)
 
 
-def encode(plaintext: str, key: int, offset: int):
-    period = (key - 1) * 2
-    rows = [[] for _ in range(key)]
-    for i, char in enumerate(plaintext):
-        row_index = key - 1 - abs(period // 2 - (i + offset) % period)
-        rows[row_index] += plaintext[i]
-    return ''.join(str(item) for inner_list in rows for item in inner_list)
-
 
 def brute_force(cipher: str, wordlist: []):
     highest_word_count = 0
