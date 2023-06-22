@@ -35,8 +35,8 @@ def brute_force(cipher: str, wordlist: []):
     row_candidate = 0
     offset_candidate = 0
     highest_row_to_try = len(cipher) // 2 + 4
-    print(f"Trying row values 2-{highest_row_to_try}")
-    print(f"Using all possible offsets")
+    print()
+    print(f"Trying row values 2-{highest_row_to_try} Using all possible offsets")
     for key in range(2, highest_row_to_try):
         period = 2 * (key - 1)
         for offset in range(period):
