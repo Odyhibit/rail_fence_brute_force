@@ -124,4 +124,6 @@ if __name__ == "__main__":
     input_text = "Tnex g hec xetsjn rtitenat iuiuoesn am t sesfsg ei pehttbe tnssla di"
     if len(sys.argv) > 1:
         input_text = sys.argv[1]
+    else:
+        print("If you include some cipher text in quotes it will be used instead of this example.")
     main(input_text)
