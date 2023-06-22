@@ -7,6 +7,9 @@ def main(cipher_text):
     green = "\u001b[32m"
     reset = "\u001b[0m"
     cipher_text = cipher_text
+    if cipher_text is None:
+        print("Nothing to solve, please give me some cipher text.")
+        return
     common_word_file = load_word_list("common_words_min_3_letters.txt")
     row, offset = brute_force(cipher_text, common_word_file)
 
