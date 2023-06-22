@@ -2,10 +2,11 @@ import click
 
 
 @click.command()
-@click.option('-t', '--plain-text', help='The plain text enclosed in quotes.')
-@click.option('-k', '--key', help='The number of rows to use')
-def main(plain_text, key):
-    print(encode(plain_text, key))
+@click.option('-t', '--plain-text', required=True, help='The plain text enclosed in quotes.')
+@click.option('-k', '--key', required=True, type=int, help='The number of rows to use')
+@click.option('-o', '--offset', required=True, type=int, help='Offset, repeats after 2(key-1)')
+def main(plain_text, key, offset):
+    print(encode(plain_text, key, offset))
 
 
 def encode(plaintext: str, key: int, offset: int):
