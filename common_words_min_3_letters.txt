@@ -67,6 +67,7 @@ centre
 certain
 change
 check
+chief
 child
 children
 city
@@ -117,6 +118,7 @@ effort
 enough
 every
 example
+expects
 experience
 explain
 eye
@@ -128,6 +130,7 @@ far
 farm
 fast
 father
+fear
 feel
 feet
 few
@@ -387,6 +390,7 @@ study
 such
 summer
 sun
+surprise
 system
 table
 take
