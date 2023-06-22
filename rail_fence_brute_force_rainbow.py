@@ -1,6 +1,8 @@
-import sys
+import click
 
 
+@click.command()
+@click.option('-t', '--cipher-text', required=True, help='The ciphered text enclosed in quotes.')
 def main(cipher_text):
     red = "\u001b[31m"
     orange = "\u001b[38:5:208m"
@@ -50,7 +52,7 @@ def brute_force(cipher: str, wordlist: []):
                 highest_word_count = word_count
                 row_candidate = key
                 offset_candidate = offset
-            if word_count == highest_word_count and word_count > 2:
+            elif word_count == highest_word_count and word_count > 2:
                 print(word_count, candidate)
             #  print(f"{key},{offset} {highest_word_count} - {candidate} ")
     return row_candidate, offset_candidate
@@ -123,9 +125,4 @@ def display_rainbow_cipher(fence: [], rainbow: [], offset: int = 0):
 
 
 if __name__ == "__main__":
-    input_text = "Tnex g hec xetsjn rtitenat iuiuoesn am t sesfsg ei pehttbe tnssla di"
-    if len(sys.argv) > 1:
-        input_text = sys.argv[1]
-    else:
-        print("If you include some cipher text in quotes it will be used instead of this example.")
-    main(input_text)
+    main()
