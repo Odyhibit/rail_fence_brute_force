@@ -32,7 +32,6 @@ def decode(cipher: str, key: int, offset: int = 0) -> str:
     return "".join(plaintext)
 
 
-
 def brute_force(cipher: str, wordlist: []):
     highest_word_count = 0
     row_candidate = 0
