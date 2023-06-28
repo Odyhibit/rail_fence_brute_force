@@ -33,6 +33,7 @@ def main(cipher_text):
 
 
 def brute_force(cipher: str, wordlist: []):
+    cipher = cipher.lower()
     highest_word_count = 0
     row_candidate = 0
     offset_candidate = 0
