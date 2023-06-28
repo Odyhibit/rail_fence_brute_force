@@ -1,6 +1,5 @@
-NCL
-RAIL
-SKY
+ncl
+rail
 about
 act
 actually
