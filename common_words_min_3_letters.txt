@@ -175,6 +175,7 @@ hard
 has
 have
 hear
+here
 heat
 heavy
 help
@@ -239,6 +240,7 @@ mark
 may
 mean
 measure
+message
 men
 might
 mile
@@ -340,6 +342,7 @@ science
 sea
 season
 second
+secret
 see
 seem
 self
