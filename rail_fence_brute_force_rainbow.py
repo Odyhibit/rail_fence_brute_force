@@ -13,7 +13,7 @@ def main(cipher_text):
     violet = "\u001b[38:5:54m"
     reset = "\u001b[0m"
     rainbow = [red, orange, yellow, green, blue, indigo, violet, reset]
-    common_word_list = load_word_list("common_words_min_3_letters.txt")
+    common_word_list = load_word_list("common_words.txt")
 
     row, offset = brute_force(cipher_text, common_word_list)
 
