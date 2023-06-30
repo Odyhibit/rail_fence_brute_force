@@ -10,11 +10,11 @@ def main(cipher_text):
     if cipher_text is None:
         print("Nothing to solve, please give me some cipher text.")
         return
-    common_words_longest_first = load_word_list("common_words_min_3_letters.txt")
+    common_words_longest_first = load_word_list("common_words.txt")
     # print(common_words_longest_first)
     row, offset, count_dict = brute_force(cipher_text, common_words_longest_first)
 
-    print(f"Row count is most likely {green}{row}{reset} with offset {green}{offset}{reset}")
+    print(f"Using key:{green}{row}{reset} offset:{green}{offset}{reset} I found {count_dict[(row, offset)]} words")
     print("Decoding with most likely settings . . .")
     print()
 
