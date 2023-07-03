@@ -2,6 +2,7 @@ import click
 
 
 @click.command()
+@click.version_option(version="0.4", prog_name="rail_fence")
 @click.option('-t', '--text', required=True, help='Text enclosed in quotes.')
 @click.option('-k', '--key', type=int, help='The number of rows to use')
 @click.option('-o', '--offset', default=0, show_default=True, type=int, help='Offset, repeats after 2(key-1)')
@@ -29,7 +30,7 @@ def main(text, key, offset, decode, brute_force):
             print()
             return
         else:
-            print(decode_rf(text,key,offset))
+            print(decode_rf(text, key, offset))
             print()
             return
 
