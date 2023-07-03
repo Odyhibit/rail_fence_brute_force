@@ -12,7 +12,9 @@ def main(cipher_text):
     indigo = "\u001b[38:5:93m"
     violet = "\u001b[38:5:54m"
     reset = "\u001b[0m"
-    rainbow = [red, orange, yellow, green, blue, indigo, violet, reset]
+    white = "\u001b[38:5:15m"
+    rainbow = [white, white, white, white, white, white, white, reset]
+    #rainbow = [red, orange, yellow, green, blue, indigo, violet, reset]
     common_word_list = load_word_list("common_words.txt")
 
     row, offset = brute_force(cipher_text, common_word_list)
