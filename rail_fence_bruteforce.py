@@ -2,29 +2,49 @@ import click
 
 
 @click.command()
-@click.option('-t', '--cipher-text', help='The ciphered text enclosed in quotes.')
-def main(cipher_text):
+@click.option('-t', '--text', required=True, help='Text enclosed in quotes.')
+@click.option('-k', '--key', type=int, help='The number of rows to use')
+@click.option('-o', '--offset', default=0, show_default=True, type=int, help='Offset, repeats after 2(key-1)')
+@click.option('--decode/--encode', '-d/-e', default=True, show_default=True)
+@click.option('--brute-force', '-b', is_flag=True)
+def main(text, key, offset, decode, brute_force):
     green = "\u001b[32m"
     reset = "\u001b[0m"
-    cipher_text = cipher_text
+    cipher_text = text
+    common_words_longest_first = load_word_list("common_words.txt")
+
     if cipher_text is None:
         print("Nothing to solve, please give me some cipher text.")
         return
-    common_words_longest_first = load_word_list("common_words.txt")
+
+    if not decode:
+        print(f'Encoding With Key:{key} Offset:{offset}')
+        print(encode(cipher_text, key, offset))
+        print()
+        return
+
+    if decode and not brute_force:
+        if key is None:
+            print('Either a key or the brute-force flag are required to decode.')
+            print()
+            return
+        else:
+            print(decode_rf(text,key,offset))
+            print()
+            return
+
     # print(common_words_longest_first)
-    row, offset, count_dict = brute_force(cipher_text, common_words_longest_first)
+    row, offset, count_dict = brute_force_rf(cipher_text, common_words_longest_first)
 
     print(f"Using key:{green}{row}{reset} offset:{green}{offset}{reset} I found {count_dict[(row, offset)]} words")
     print("Decoding with most likely settings . . .")
     print()
 
     sorted_list = sorted(count_dict, key=count_dict.get, reverse=True)
-    # print(count_dict)
-    # print(sorted_list)
     sorted_list.pop(0)
     keep_going = True
     while keep_going:
-        print(decode(cipher_text, row, offset))
+        print(decode_rf(cipher_text, row, offset))
         print()
         response = input(f"Does that look correct ({green}y{reset}/{green}n{reset})")
         if response == "n" or response == "N":
@@ -34,7 +54,7 @@ def main(cipher_text):
             keep_going = False
 
 
-def decode(cipher: str, key: int, offset: int = 0) -> str:
+def decode_rf(cipher: str, key: int, offset: int = 0) -> str:
     period = 2 * key - 2
     plaintext = ["_"] * len(cipher)
     index = 0
@@ -46,7 +66,7 @@ def decode(cipher: str, key: int, offset: int = 0) -> str:
     return "".join(plaintext)
 
 
-def brute_force(cipher: str, wordlist: []):
+def brute_force_rf(cipher: str, wordlist: []):
     cipher = cipher.lower()
     word_count_dictionary = {}
     highest_word_count = 0
@@ -58,7 +78,7 @@ def brute_force(cipher: str, wordlist: []):
         period = 2 * (key - 1)
         for offset in range(period):
             word_count = 0
-            candidate = decode(cipher, key, offset)
+            candidate = decode_rf(cipher, key, offset)
             for word in wordlist:
                 word_occurrences, candidate = count_and_remove(word, candidate)
                 word_count += word_occurrences
@@ -85,6 +105,15 @@ def load_word_list(path: str) -> []:
         while line := common_words.readline():
             common_word_list.append(line.strip())
         return sorted(common_word_list, key=len, reverse=True)
+
+
+def encode(plaintext: str, key: int, offset: int):
+    period = 2 * key - 2
+    rows = [[] for _ in range(key)]
+    for i, char in enumerate(plaintext):
+        row_index = key - 1 - abs(period // 2 - (i + offset) % period)
+        rows[row_index] += plaintext[i]
+    return ''.join(str(item) for inner_list in rows for item in inner_list)
 
 
 if __name__ == "__main__":
