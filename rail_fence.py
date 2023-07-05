@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import click
 
 
@@ -9,8 +10,6 @@ import click
 @click.option('--decode/--encode', '-d/-e', default=True, show_default=True)
 @click.option('--brute-force', '-b', is_flag=True)
 def main(text, key, offset, decode, brute_force):
-    green = "\u001b[32m"
-    reset = "\u001b[0m"
     cipher_text = text
     common_words_longest_first = load_word_list("common_words.txt")
 
@@ -20,7 +19,7 @@ def main(text, key, offset, decode, brute_force):
 
     if not decode:
         print(f'Encoding With Key:{key} Offset:{offset}')
-        print(encode(cipher_text, key, offset))
+        print(encode(text, key, offset))
         print()
         return
 
@@ -30,29 +29,29 @@ def main(text, key, offset, decode, brute_force):
             print()
             return
         else:
+            print(f'Decoding With Key:{key} Offset:{offset}')
             print(decode_rf(text, key, offset))
             print()
             return
 
-    # print(common_words_longest_first)
-    row, offset, count_dict = brute_force_rf(cipher_text, common_words_longest_first)
-
-    print(f"Using key:{green}{row}{reset} offset:{green}{offset}{reset} I found {count_dict[(row, offset)]} words")
-    print("Decoding with most likely settings . . .")
-    print()
-
-    sorted_list = sorted(count_dict, key=count_dict.get, reverse=True)
-    sorted_list.pop(0)
-    keep_going = True
-    while keep_going:
-        print(decode_rf(cipher_text, row, offset))
+    if decode and brute_force:
+        row, offset, count_dict = brute_force_rf(cipher_text, common_words_longest_first)
+        print(f"Using key:{row} offset:{offset} words found use {count_dict[(row, offset)]} of the letters")
+        print("Decoding with most likely settings . . .")
         print()
-        response = input(f"Does that look correct ({green}y{reset}/{green}n{reset})")
-        if response == "n" or response == "N":
-            row, offset = sorted_list.pop(0)
-            print(f"key:{row} offset:{offset} words found {count_dict[(row, offset)]}")
-        if response == "y" or response == "Y":
-            keep_going = False
+
+        sorted_list = sorted(count_dict, key=count_dict.get, reverse=True)
+        sorted_list.pop(0)
+        keep_going = True
+        while keep_going:
+            print(decode_rf(cipher_text, row, offset))
+            print()
+            response = input(f"Does that look correct (y/n)")
+            if response in {"n", "N"}:
+                row, offset = sorted_list.pop(0)
+                print(f"key:{row} offset:{offset} words found use {count_dict[(row, offset)]} of the letters")
+            if response in {"Y", "y"}:
+                keep_going = False
 
 
 def decode_rf(cipher: str, key: int, offset: int = 0) -> str:
@@ -92,15 +91,19 @@ def brute_force_rf(cipher: str, wordlist: []):
 
 
 def count_and_remove(needle: str, haystack: str, current_count: int = 0) -> (int, str):
+    """recursively removes the word and then looks again keeping a count
+       Returns: count of how many times the word occurred, and the text with the word removed
+    """
     index = haystack.find(needle)
     if index == -1:
         return current_count, haystack
     new_haystack = haystack[:index] + haystack[index + len(needle):]
-    current_count += 1
+    current_count += len(needle)
     return count_and_remove(needle, new_haystack, current_count)
 
 
 def load_word_list(path: str) -> []:
+    """Returns a list of words in the file with the longest first."""
     with open(path, "r") as common_words:
         common_word_list = []
         while line := common_words.readline():
