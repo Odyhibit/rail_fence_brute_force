@@ -144,6 +144,7 @@ flag
 fly
 follow
 food
+for
 form
 found
 four
@@ -287,6 +288,7 @@ once
 one
 only
 open
+or
 order
 other
 our
@@ -446,6 +448,7 @@ very
 voice
 vowel
 wait
+wall
 walk
 want
 war

@@ -40,33 +40,25 @@ def main(text, key, offset, decode, brute_force, show_all):
             return
 
     if decode and brute_force:
-        row, offset, count_dict = brute_force_rf(cipher_text, common_words_longest_first)
-        print(f"Using key:{row} offset:{offset} words found use {count_dict[(row, offset)]} of the letters")
-        print("Decoding with most likely settings . . .")
-        print()
-
+        count_dict = brute_force_rf(cipher_text, common_words_longest_first)
         sorted_list = sorted(count_dict, key=count_dict.get, reverse=True)
         if show_all:
             for (row, offset) in sorted_list:
                 print(decode_rf(cipher_text, row, offset))
             return
-
-        sorted_list.pop(0)
-        keep_going = True
-        while keep_going:
+        while True:
+            (row, offset) = sorted_list.pop(0)
+            print(f"key:{row} offset:{offset} words found use {count_dict[(row, offset)]} of the letters")
             print(decode_rf(cipher_text, row, offset))
             print()
-
             response = input(f"Does that look correct (y/n/a)\n yes, no, show all(most likely first)")
-            if response in {"n", "N"}:
-                row, offset = sorted_list.pop(0)
-                print(f"key:{row} offset:{offset} words found use {count_dict[(row, offset)]} of the letters")
             if response in {"Y", "y"}:
                 return
             if response in {"A", "a"} or show_all:
                 for (row, offset) in sorted_list:
                     print(decode_rf(cipher_text, row, offset))
                 return
+        return
 
 
 def decode_rf(cipher: str, key: int, offset: int = 0) -> str:
@@ -85,8 +77,6 @@ def brute_force_rf(cipher: str, wordlist: []):
     cipher = cipher.lower()
     word_count_dictionary = {}
     highest_word_count = 0
-    row_candidate = 0
-    offset_candidate = 0
     highest_row_to_try = len(cipher) // 2 + 4
     print(f"Trying row values 2-{highest_row_to_try} using all possible offsets")
     for key in range(2, highest_row_to_try):
@@ -99,10 +89,8 @@ def brute_force_rf(cipher: str, wordlist: []):
                 word_count += word_occurrences
             if word_count > highest_word_count:
                 highest_word_count = word_count
-                row_candidate = key
-                offset_candidate = offset
             word_count_dictionary[(key, offset)] = word_count
-    return row_candidate, offset_candidate, word_count_dictionary
+    return word_count_dictionary
 
 
 def count_and_remove(needle: str, haystack: str, current_count: int = 0) -> (int, str):
@@ -126,7 +114,7 @@ def load_word_list(path: str) -> []:
         return sorted(common_word_list, key=len, reverse=True)
 
 
-def encode(plaintext: str, key: int, offset: int):
+def encode(plaintext: str, key: int, offset: int) -> str:
     period = 2 * key - 2
     rows = [[] for _ in range(key)]
     for i, char in enumerate(plaintext):
