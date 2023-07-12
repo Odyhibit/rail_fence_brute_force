@@ -43,10 +43,8 @@ def main(text, key, offset, decode, brute_force, show_all):
         count_dict = brute_force_rf(cipher_text, common_words_longest_first)
         sorted_list = sorted(count_dict, key=count_dict.get, reverse=True)
         if show_all:
-            for (row, offset) in sorted_list:
-                print(decode_rf(cipher_text, row, offset))
-            return
-        while True:
+            print_all(sorted_list, cipher_text)
+        while sorted_list:
             (row, offset) = sorted_list.pop(0)
             print(f"key:{row} offset:{offset} words found use {count_dict[(row, offset)]} of the letters")
             print(decode_rf(cipher_text, row, offset))
@@ -55,10 +53,13 @@ def main(text, key, offset, decode, brute_force, show_all):
             if response in {"Y", "y"}:
                 return
             if response in {"A", "a"} or show_all:
-                for (row, offset) in sorted_list:
-                    print(decode_rf(cipher_text, row, offset))
-                return
-        return
+                print_all(sorted_list, cipher_text)
+
+
+def print_all(sorted_most_likely: [], cipher_text: str):
+    for (row, offset) in sorted_most_likely:
+        print(decode_rf(cipher_text, row, offset))
+    return
 
 
 def decode_rf(cipher: str, key: int, offset: int = 0) -> str:
