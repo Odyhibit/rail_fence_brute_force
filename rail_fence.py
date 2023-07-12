@@ -9,12 +9,17 @@ import click
 @click.option('-o', '--offset', default=0, show_default=True, type=int, help='Offset, repeats after 2(key-1)')
 @click.option('--decode/--encode', '-d/-e', default=True, show_default=True)
 @click.option('--brute-force', '-b', is_flag=True)
-def main(text, key, offset, decode, brute_force):
+@click.option('--show-all', '-a', is_flag=True, help="Send all possible decryption to standard output")
+def main(text, key, offset, decode, brute_force, show_all):
     cipher_text = text
     common_words_longest_first = load_word_list("common_words.txt")
 
     if cipher_text is None:
         print("Nothing to solve, please give me some cipher text.")
+        return
+
+    if show_all and not brute_force:
+        print("show-all only works with brute force mode")
         return
 
     if not decode:
@@ -41,17 +46,27 @@ def main(text, key, offset, decode, brute_force):
         print()
 
         sorted_list = sorted(count_dict, key=count_dict.get, reverse=True)
+        if show_all:
+            for (row, offset) in sorted_list:
+                print(decode_rf(cipher_text, row, offset))
+            return
+
         sorted_list.pop(0)
         keep_going = True
         while keep_going:
             print(decode_rf(cipher_text, row, offset))
             print()
-            response = input(f"Does that look correct (y/n)")
+
+            response = input(f"Does that look correct (y/n/a)\n yes, no, show all(most likely first)")
             if response in {"n", "N"}:
                 row, offset = sorted_list.pop(0)
                 print(f"key:{row} offset:{offset} words found use {count_dict[(row, offset)]} of the letters")
             if response in {"Y", "y"}:
-                keep_going = False
+                return
+            if response in {"A", "a"} or show_all:
+                for (row, offset) in sorted_list:
+                    print(decode_rf(cipher_text, row, offset))
+                return
 
 
 def decode_rf(cipher: str, key: int, offset: int = 0) -> str:
