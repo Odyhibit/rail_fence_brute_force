@@ -23,6 +23,9 @@ def main(text, key, offset, decode, brute_force, show_all):
         return
 
     if not decode:
+        if not key:
+            print("Please provide a key(number of rows)")
+            return
         print(f'Encoding With Key:{key} Offset:{offset}')
         print(encode(text, key, offset))
         print()
@@ -44,6 +47,7 @@ def main(text, key, offset, decode, brute_force, show_all):
         sorted_list = sorted(count_dict, key=count_dict.get, reverse=True)
         if show_all:
             print_all(sorted_list, cipher_text)
+            return
         while sorted_list:
             (row, offset) = sorted_list.pop(0)
             print(f"key:{row} offset:{offset} words found use {count_dict[(row, offset)]} of the letters")
