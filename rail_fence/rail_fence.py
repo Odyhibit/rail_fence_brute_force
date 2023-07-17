@@ -4,7 +4,7 @@ import click
 
 @click.command()
 @click.version_option(version="0.4", prog_name="rail_fence")
-@click.option('-t', '--text', required=True, help='Text enclosed in quotes.')
+@click.option('-t', '--text', required=True, help='Text enclosed in single quotes.')
 @click.option('-k', '--key', type=int, help='The number of rows to use')
 @click.option('-o', '--offset', default=0, show_default=True, type=int, help='Offset, repeats after 2(key-1)')
 @click.option('--decode/--encode', '-d/-e', default=True, show_default=True)
