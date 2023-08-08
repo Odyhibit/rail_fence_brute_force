@@ -49,7 +49,7 @@ def main(text, key, offset, decode, brute_force, show_all):
             print_all(sorted_list, cipher_text)
             return
 
-        print(f"Trying row values 2-{len(cipher) // 2 + 4} using all possible offsets")
+        print(f"Trying row values 2-{len(cipher_text) // 2 + 4} using all possible offsets")
         while sorted_list:
             (row, offset) = sorted_list.pop(0)
             print(f"key:{row} offset:{offset} words found use {count_dict[(row, offset)]} of the letters")
@@ -88,27 +88,28 @@ def brute_force_rf(cipher: str, wordlist: []):
     for key in range(2, highest_row_to_try):
         period = 2 * (key - 1)
         for offset in range(period):
-            word_count = 0
-            candidate = decode_rf(cipher, key, offset)
+            letter_count = 0
+            plain_text = decode_rf(cipher, key, offset)
             for word in wordlist:
-                word_occurrences, candidate = count_and_remove(word, candidate)
-                word_count += word_occurrences
-            if word_count > highest_word_count:
-                highest_word_count = word_count
-            word_count_dictionary[(key, offset)] = word_count
+                letters_found, plain_text = count_and_remove(word, plain_text)
+                letter_count += letters_found
+            if letter_count > highest_word_count:
+                highest_word_count = letter_count
+            word_count_dictionary[(key, offset)] = letter_count
     return word_count_dictionary
 
 
-def count_and_remove(needle: str, haystack: str, current_count: int = 0) -> (int, str):
+def count_and_remove(needle: str, haystack: str) -> (int, str):
     """recursively removes the word and then looks again keeping a count
        Returns: count of how many times the word occurred, and the text with the word removed
     """
-    index = haystack.find(needle)
-    if index == -1:
-        return current_count, haystack
-    new_haystack = haystack[:index] + haystack[index + len(needle):]
-    current_count += len(needle)
-    return count_and_remove(needle, new_haystack, current_count)
+    num_found = haystack.count(needle)
+    if num_found <= 0:
+        return 0, haystack
+    cleared_haystack = haystack.replace(needle, "")
+
+    letter_count = len(needle) * num_found
+    return letter_count, cleared_haystack
 
 
 def load_word_list(path: str) -> []:
