@@ -2,8 +2,10 @@
 Use this from the command line. 
 
 
-Usage: rail_fence.py [OPTIONS] -t 'text to encode/decode'
-
+# Usage: 
+```console
+rail_fence.py [OPTIONS] -t 'text to encode/decode'
+```
 ## Options:
 
   --version                    Show the version and exit.  
@@ -16,3 +18,8 @@ Usage: rail_fence.py [OPTIONS] -t 'text to encode/decode'
   --help                       Show this message and exit.  
   --help   
   
+# Installation
+Use the CODE button above to download the files. If you prefer to use curl to download the archive.
+```console
+curl -LJO https://github.com/Odyhibit/rail_fence_brute_force/archive/refs/heads/main.zip
+```
