@@ -1,7 +1,7 @@
 import time
-import os
 import rail_fence
 import rail_fence2
+import multiprocess
 
 def load_word_list(path: str) -> []:
     """Returns a list of words in the file with the longest first."""
@@ -22,19 +22,34 @@ def decode_rf(cipher: str, key: int, offset: int = 0) -> str:
                 index += 1
     return "".join(plaintext)
 
+
+example_cipher = "dme  udtgceonhe i nbdt eniTI emh lpeitos san o hgnnit,i s   t eathjcnniundisse o tttpo nh naeaoenstN.    eei.xlslap lma"
+
+start = time.time()
 wordlist = load_word_list("common_words.txt")
-example_cipher = "T j epse tneo gnhilNo sd hmninhsi uta xml etneta  eddt eln,adta sal opiti pnigmc ieo hsoeissnaenchIe bo  t . nnenut t ."
-
+end = time.time()
+print(f"load wordlist: \tTime taken: {(end-start):.04f}s")
 
 start = time.time()
-rail_fence2.brute_force_rf(example_cipher, wordlist)
+results = rail_fence2.brute_force_rf(example_cipher, wordlist)
 end = time.time()
 # show time of execution per iteration
-print(f"Std functions: \tTime taken: {(end-start)*10**3:.03f}ms")
+print(f"Std functions: \tTime taken: {(end-start):.04f}s")
+sorted_list = sorted(results, key=results.get, reverse=True)
+print(f" key:{sorted_list[0][0]}  offset:{sorted_list[0][1]}")
 
 start = time.time()
-rail_fence.brute_force_rf(example_cipher, wordlist)
+results = rail_fence.brute_force_rf(example_cipher, wordlist)
 end = time.time()
 # show time of execution per iteration
-print(f"Recursion: \tTime taken: {(end-start)*10**3:.03f}ms")
+print(f"Recursion: \tTime taken: {(end-start):.04f}s")
+sorted_list = sorted(results, key=results.get, reverse=True)
+print(f" key:{sorted_list[0][0]}  offset:{sorted_list[0][1]}")
 
+start = time.time()
+results = multiprocess.brute_force_rf(example_cipher, wordlist)
+end = time.time()
+# show time of execution per iteration
+print(f"Multiprocess: \tTime taken: {(end-start):.04f}s")
+sorted_list = sorted(results, key=results.get, reverse=True)
+print(f" key:{sorted_list[0][0]}  offset:{sorted_list[0][1]}")

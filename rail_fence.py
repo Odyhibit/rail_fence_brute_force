@@ -49,7 +49,7 @@ def main(text, key, offset, decode, brute_force, show_all):
             print_all(sorted_list, cipher_text)
             return
 
-        print(f"Trying row values 2-{len(cipher) // 2 + 4} using all possible offsets")
+        print(f"Trying row values 2-{len(cipher_text) // 2 + 4} using all possible offsets")
         while sorted_list:
             (row, offset) = sorted_list.pop(0)
             print(f"key:{row} offset:{offset} words found use {count_dict[(row, offset)]} of the letters")

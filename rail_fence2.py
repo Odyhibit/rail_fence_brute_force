@@ -83,7 +83,6 @@ def decode_rf(cipher: str, key: int, offset: int = 0) -> str:
 def brute_force_rf(cipher: str, wordlist: []):
     cipher = cipher.lower()
     word_count_dictionary = {}
-    highest_word_count = 0
     highest_row_to_try = len(cipher) // 2 + 4
     for key in range(2, highest_row_to_try):
         period = 2 * (key - 1)
@@ -91,10 +90,9 @@ def brute_force_rf(cipher: str, wordlist: []):
             letter_count = 0
             plain_text = decode_rf(cipher, key, offset)
             for word in wordlist:
-                letters_found, plain_text = count_and_remove(word, plain_text)
-                letter_count += letters_found
-            if letter_count > highest_word_count:
-                highest_word_count = letter_count
+                # letters_found, plain_text = count_and_remove(word, plain_text)
+                # letter_count += letters_found
+                letter_count += plain_text.count(word)
             word_count_dictionary[(key, offset)] = letter_count
     return word_count_dictionary
 
