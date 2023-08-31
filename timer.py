@@ -30,22 +30,22 @@ wordlist = load_word_list("common_words.txt")
 end = time.time()
 print(f"load wordlist: \tTime taken: {(end-start):.04f}s")
 
-start = time.time()
+start = time.time_ns()
 results = rail_fence2.brute_force_rf(example_cipher, wordlist)
-end = time.time()
+end = time.time_ns()
 # show time of execution per iteration
-print(f"Std functions: \tTime taken: {(end-start):.04f}s")
+print(f"Std functions: \tTime taken: {((end-start) / 1000000):.04f}ms")
 sorted_list = sorted(results, key=results.get, reverse=True)
 print(f" key:{sorted_list[0][0]}  offset:{sorted_list[0][1]}")
 
-start = time.time()
+start = time.time_ns()
 results = rail_fence.brute_force_rf(example_cipher, wordlist)
-end = time.time()
+end = time.time_ns()
 # show time of execution per iteration
-print(f"Recursion: \tTime taken: {(end-start):.04f}s")
+print(f"Recursion: \tTime taken: {((end-start) / 1000000):.04f}ms")
 sorted_list = sorted(results, key=results.get, reverse=True)
 print(f" key:{sorted_list[0][0]}  offset:{sorted_list[0][1]}")
-
+'''
 start = time.time()
 results = multiprocess.brute_force_rf(example_cipher, wordlist)
 end = time.time()
@@ -53,3 +53,4 @@ end = time.time()
 print(f"Multiprocess: \tTime taken: {(end-start):.04f}s")
 sorted_list = sorted(results, key=results.get, reverse=True)
 print(f" key:{sorted_list[0][0]}  offset:{sorted_list[0][1]}")
+'''

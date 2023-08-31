@@ -90,9 +90,10 @@ def brute_force_rf(cipher: str, wordlist: []):
             letter_count = 0
             plain_text = decode_rf(cipher, key, offset)
             for word in wordlist:
-                # letters_found, plain_text = count_and_remove(word, plain_text)
-                # letter_count += letters_found
-                letter_count += plain_text.count(word)
+                this_word = plain_text.count(word)
+                if this_word > 0:
+                    letter_count += len(word) * this_word
+                    plain_text.replace(word, "")
             word_count_dictionary[(key, offset)] = letter_count
     return word_count_dictionary
 
@@ -102,12 +103,8 @@ def count_and_remove(needle: str, haystack: str) -> (int, str):
        Returns: count of how many times the word occurred, and the text with the word removed
     """
     num_found = haystack.count(needle)
-    if num_found <= 0:
-        return 0, haystack
-    cleared_haystack = haystack.replace(needle, "")
-
     letter_count = len(needle) * num_found
-    return letter_count, cleared_haystack
+    return letter_count
 
 
 def load_word_list(path: str) -> []:
