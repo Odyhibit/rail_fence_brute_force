@@ -83,7 +83,6 @@ def decode_rf(cipher: str, key: int, offset: int = 0) -> str:
 def brute_force_rf(cipher: str, wordlist: []):
     cipher = cipher.lower()
     word_count_dictionary = {}
-    highest_word_count = 0
     highest_row_to_try = len(cipher) // 2 + 4
     for key in range(2, highest_row_to_try):
         period = 2 * (key - 1)
@@ -91,10 +90,10 @@ def brute_force_rf(cipher: str, wordlist: []):
             letter_count = 0
             plain_text = decode_rf(cipher, key, offset)
             for word in wordlist:
-                letters_found, plain_text = count_and_remove(word, plain_text)
-                letter_count += letters_found
-            if letter_count > highest_word_count:
-                highest_word_count = letter_count
+                this_word = plain_text.count(word)
+                if this_word > 0:
+                    letter_count += len(word) * this_word
+                    plain_text.replace(word, "")
             word_count_dictionary[(key, offset)] = letter_count
     return word_count_dictionary
 
@@ -104,12 +103,8 @@ def count_and_remove(needle: str, haystack: str) -> (int, str):
        Returns: count of how many times the word occurred, and the text with the word removed
     """
     num_found = haystack.count(needle)
-    if num_found <= 0:
-        return 0, haystack
-    cleared_haystack = haystack.replace(needle, "")
-
     letter_count = len(needle) * num_found
-    return letter_count, cleared_haystack
+    return letter_count
 
 
 def load_word_list(path: str) -> []:
