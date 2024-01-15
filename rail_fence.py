@@ -6,7 +6,7 @@ import click
 @click.version_option(version="0.4", prog_name="rail_fence")
 @click.option('-t', '--text', required=True, help='Text enclosed in single quotes.')
 @click.option('-k', '--key', type=int, help='The number of rows to use')
-@click.option('-o', '--offset', default=0, show_default=True, type=int, help='Offset, repeats after 2(key-1)')
+@click.option('-o', '--offset', default=0, show_default=True, type=int, help='Offset, how many rails to skip before starting.')
 @click.option('--decode/--encode', '-d/-e', default=True, show_default=True)
 @click.option('--brute-force', '-b', is_flag=True)
 @click.option('--show-all', '-a', is_flag=True, help="Send all possible decryption to standard output")
