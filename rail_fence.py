@@ -6,7 +6,8 @@ import click
 @click.version_option(version="0.4", prog_name="rail_fence")
 @click.option('-t', '--text', required=True, help='Text enclosed in single quotes.')
 @click.option('-k', '--key', type=int, help='The number of rows to use')
-@click.option('-o', '--offset', default=0, show_default=True, type=int, help='Offset, how many rails to skip before starting.')
+@click.option('-o', '--offset', default=0, show_default=True, type=int,
+              help='Offset, how many rails to skip before starting.')
 @click.option('--decode/--encode', '-d/-e', default=True, show_default=True)
 @click.option('--brute-force', '-b', is_flag=True)
 @click.option('--show-all', '-a', is_flag=True, help="Send all possible decryption to standard output")
@@ -14,6 +15,7 @@ def main(text, key, offset, decode, brute_force, show_all):
     cipher_text = text
     common_words_longest_first = load_word_list("common_words.txt")
 
+    # Errors messages, print and exit.
     if cipher_text is None:
         print("Nothing to solve, please give me some cipher text.")
         return
@@ -22,25 +24,22 @@ def main(text, key, offset, decode, brute_force, show_all):
         print("show-all only works with brute force mode")
         return
 
+    if decode and not brute_force and key is None:
+        print('Either a key or the brute-force flag are required to decode.')
+        print()
+        return
+
+    if not decode and not key:
+        print("A key(number of rows) is required to encode.")
+        print()
+        return
+
+    # Encoding
     if not decode:
-        if not key:
-            print("Please provide a key(number of rows)")
-            return
         print(f'Encoding With Key:{key} Offset:{offset}')
         print(encode(text, key, offset))
         print()
         return
-
-    if decode and not brute_force:
-        if key is None:
-            print('Either a key or the brute-force flag are required to decode.')
-            print()
-            return
-        else:
-            print(f'Decoding With Key:{key} Offset:{offset}')
-            print(decode_rf(text, key, offset))
-            print()
-            return
 
     if decode and brute_force:
         count_dict = brute_force_rf(cipher_text, common_words_longest_first)
@@ -48,11 +47,11 @@ def main(text, key, offset, decode, brute_force, show_all):
         if show_all:
             print_all(sorted_list, cipher_text)
             return
-
         print(f"Trying row values 2-{len(cipher_text) // 2 + 4} using all possible offsets")
         while sorted_list:
             (row, offset) = sorted_list.pop(0)
-            print(f"key:{row} offset:{offset} - used {count_dict[(row, offset)]} out of {len(cipher_text)} of the letters")
+            print(
+                f"key:{row} offset:{offset} - used {count_dict[(row, offset)]} out of {len(cipher_text)} of the letters")
             print(decode_rf(cipher_text, row, offset))
             print()
             response = input(f"Does that look correct (y/n/a)\n yes, no, show all(most likely first)")
@@ -60,6 +59,12 @@ def main(text, key, offset, decode, brute_force, show_all):
                 return
             if response in {"A", "a"} or show_all:
                 print_all(sorted_list, cipher_text)
+
+    if decode:
+        print(f'Decoding With Key:{key} Offset:{offset}')
+        print(decode_rf(text, key, offset))
+        print()
+        return
 
 
 def print_all(sorted_most_likely: [], cipher_text: str):
@@ -112,7 +117,7 @@ def count_and_remove(needle: str, haystack: str, current_count: int = 0) -> (int
 
 
 def load_word_list(path: str) -> []:
-    """Returns a list of words in the file with the longest first."""
+    """Returns a list of words in descending order by length.(the longest first)"""
     with open(path, "r") as common_words:
         common_word_list = []
         while line := common_words.readline():
